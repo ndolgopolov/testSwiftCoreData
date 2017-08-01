@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.preloadDBData()
         return true
     }
 
@@ -44,6 +45,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
+    func preloadDBData()
+    {
+        let sqlitePath = Bundle.main.path(forResource: "testSwiftCoreData", ofType: "sqlite")
+
+        
+        let dbPath = URL(fileURLWithPath: sqlitePath!)
+
+        let newPath = URL(fileURLWithPath: NSPersistentContainer.defaultDirectoryURL().relativePath + "/testSwiftCoreData.sqlite")
+
+        
+        if !FileManager.default.fileExists(atPath: NSPersistentContainer.defaultDirectoryURL().relativePath + "/testSwiftCoreData.sqlite") {
+            do {
+                try FileManager.default.copyItem(at: dbPath, to: newPath)
+                print("ok")
+            } catch {
+                print("error")
+            }
+        } else {
+            print("file exist")
+        }
+    }
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
